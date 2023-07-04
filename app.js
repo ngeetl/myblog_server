@@ -13,15 +13,15 @@ app.get('/posts', (req, res) => {
   let limit = 5;
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
-  const paginatedPosts = posts.slice(startIndex, endIndex);
+  const sortedPosts = posts.sort((a, b) => b.createAt - a.createAt);
+  const paginatedPosts = sortedPosts.slice(startIndex, endIndex);
 
   const publishPost = posts.filter(post => {
     return post.publish
   })
-  console.log(publishPost);
 
   res.send({
-    posts,
+    // posts: sortedPosts,
     totalPosts: posts.length,
     // totalPages: Math.ceil(posts.length / limit),
     // currentPage: page,
