@@ -9,7 +9,19 @@ let posts = []; // 포스트 데이터를 저장할 배열
 let currentId = 1; // 현재 id 값
 
 app.get('/posts', (req, res) => {
-  res.send(posts);
+  const page = parseInt(req.query.page)
+  let limit = 5;
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
+  const paginatedPosts = posts.slice(startIndex, endIndex);
+
+  res.send({
+    posts,
+    totalPosts: posts.length,
+    totalPages: Math.ceil(posts.length / limit),
+    currentPage: page,
+    paginatedPosts: paginatedPosts
+  });
 });
 
 app.get('/posts/:id', (req, res) => {
