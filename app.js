@@ -15,12 +15,18 @@ app.get('/posts', (req, res) => {
   const endIndex = page * limit;
   const paginatedPosts = posts.slice(startIndex, endIndex);
 
+  const publishPost = posts.filter(post => {
+    return post.publish
+  })
+  console.log(publishPost);
+
   res.send({
     posts,
     totalPosts: posts.length,
-    totalPages: Math.ceil(posts.length / limit),
-    currentPage: page,
-    paginatedPosts: paginatedPosts
+    // totalPages: Math.ceil(posts.length / limit),
+    // currentPage: page,
+    paginatedPosts,
+    publishPost
   });
 });
 
