@@ -1,15 +1,22 @@
 const express = require('express');
 const app = express();
 var cors = require('cors');
+const path = require('path')
  
 app.use(cors());
+app.use(express.static(path.join(__dirname, 'build')));
 app.use(express.json());
 
 let posts = []; // 포스트 데이터를 저장할 배열
 let currentId = 1; // 현재 id 값
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build/index.html'));
+});
+
 app.get('/posts', (req, res) => {
-  const page = parseInt(req.query.page)
+  const page = parseInt(req.query.page);
+  const searchText = req.query.search;
   let limit = 5;
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
@@ -18,15 +25,15 @@ app.get('/posts', (req, res) => {
 
   const publishPost = posts.filter(post => {
     return post.publish
-  })
+  });
+
+  const searchPost = posts.filter(post => post.title.toLowerCase().includes(searchText.toLowerCase()));
 
   res.send({
-    // posts: sortedPosts,
     totalPosts: posts.length,
-    // totalPages: Math.ceil(posts.length / limit),
-    // currentPage: page,
     paginatedPosts,
-    publishPost
+    publishPost,
+    searchPost
   });
 });
 
